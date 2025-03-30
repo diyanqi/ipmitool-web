@@ -1,23 +1,21 @@
-import type { AppProps } from "next/app";
+import type { AppProps } from 'next/app';
+import { NextUIProvider } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { fontSans, fontMono } from '@/config/fonts';
+import { appWithTranslation } from 'next-i18next';
+import '@/styles/globals.css';
 
-import { HeroUIProvider } from "@heroui/system";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { useRouter } from "next/router";
-
-import { fontSans, fontMono } from "@/config/fonts";
-import "@/styles/globals.css";
-
-export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
+function App({ Component, pageProps }: AppProps) {
   return (
-    <HeroUIProvider navigate={router.push}>
-      <NextThemesProvider>
+    <NextUIProvider>
+      <NextThemesProvider attribute="class" defaultTheme="system">
         <Component {...pageProps} />
       </NextThemesProvider>
-    </HeroUIProvider>
+    </NextUIProvider>
   );
 }
+
+export default appWithTranslation(App);
 
 export const fonts = {
   sans: fontSans.style.fontFamily,

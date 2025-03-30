@@ -1,0 +1,15 @@
+{
+  "fanControl": {
+    "title": "Fan Control",
+    "currentStatus": "Current Fan Status",
+    "loading": "Loading fan information...",
+    "noData": "No sensor data available",
+    "fanSpeed": "Fan Speed: {{value}}%",
+    "setsFanSpeed": "Sets fan speed from 0% (minimum) to 100% (maximum)",
+    "applyButton": "Apply Fan Speed",
+    "applying": "Applying...",
+    "successMessage": "Fan speed successfully set to {{value}}%",
+    "failedToFetch": "Failed to fetch fan information",
+    "failedToSet": "Failed to set fan speed"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "fanControl": {
+    "title": "风扇控制",
+    "currentStatus": "当前风扇状态",
+    "loading": "正在加载风扇信息...",
+    "noData": "没有可用的传感器数据",
+    "fanSpeed": "风扇速度: {{value}}%",
+    "setsFanSpeed": "设置风扇速度从0%(最小)到100%(最大)",
+    "applyButton": "应用风扇速度",
+    "applying": "正在应用...",
+    "successMessage": "风扇速度已成功设置为{{value}}%",
+    "failedToFetch": "获取风扇信息失败",
+    "failedToSet": "设置风扇速度失败"
+  }
+}

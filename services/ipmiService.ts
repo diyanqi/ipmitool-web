@@ -48,4 +48,5 @@ export const setFanSpeed = (fanSpeed: number) => {
   return executeIpmiCommand('raw', ['0x30', '0x30', '0x02', '0xff', `0x${hexSpeed}`]);
 };
 
-export const getFanInfo = () => executeIpmiCommand('sensor', ['get', 'FAN1']);
+// 修改获取风扇信息的方法，使用更通用的命令
+export const getFanInfo = () => executeIpmiCommand('sensor', ['list', 'Fan']);

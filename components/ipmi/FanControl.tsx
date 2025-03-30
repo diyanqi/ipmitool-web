@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
+import { Slider } from '@heroui/slider';
+import { useTranslation } from 'next-i18next';
 import { setFanSpeed, getFanInfo } from '@/services/ipmiService';
 
 const FanControl: React.FC = () => {
+  const { t } = useTranslation('common');
   const [fanSpeed, setFanSpeedValue] = useState<number>(50);
   const [currentFanInfo, setCurrentFanInfo] = useState<string>('Unknown');
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +21,7 @@ const FanControl: React.FC = () => {
       const response = await getFanInfo();
       
       if (!response.success) {
-        setError(response.error || 'Failed to fetch fan information');
+        setError(response.error || t('fanControl.failedToFetch'));
         return;
       }
       
@@ -52,11 +54,11 @@ const FanControl: React.FC = () => {
       const response = await setFanSpeed(fanSpeed);
       
       if (!response.success) {
-        setError(response.error || 'Failed to set fan speed');
+        setError(response.error || t('fanControl.failedToSet'));
         return;
       }
       
-      setSuccessMessage(`Fan speed successfully set to ${fanSpeed}%`);
+      setSuccessMessage(t('fanControl.successMessage', { value: fanSpeed }));
       // 更新风扇信息
       fetchFanInfo();
     } catch (err) {
@@ -80,18 +82,20 @@ const FanControl: React.FC = () => {
   return (
     <div className="w-full overflow-hidden bg-content1 rounded-lg shadow">
       <div className="p-4 border-b border-default-200">
-        <h3 className="text-lg font-medium">Fan Control</h3>
+        <h3 className="text-lg font-medium">{t('fanControl.title')}</h3>
       </div>
       <div className="p-4">
         <div className="mb-4">
-          <p className="text-sm font-medium text-default-500">Current Fan Status</p>
+          <p className="text-sm font-medium text-default-500">{t('fanControl.currentStatus')}</p>
           {isLoadingInfo ? (
             <div className="mt-2 flex items-center">
               <div className="animate-spin h-4 w-4 mr-2 border-2 border-primary rounded-full border-t-transparent"></div>
-              <span className="text-sm">Loading fan information...</span>
+              <span className="text-sm">{t('fanControl.loading')}</span>
             </div>
-          ) : (
+          ) : currentFanInfo && currentFanInfo !== 'Unknown' ? (
             <p className="mt-1 text-sm break-words">{currentFanInfo}</p>
+          ) : (
+            <p className="mt-1 text-sm text-default-400">{t('fanControl.noData')}</p>
           )}
         </div>
         
@@ -109,23 +113,45 @@ const FanControl: React.FC = () => {
         
         <div className="mb-4">
           <label className="block text-sm font-medium text-default-700 mb-1">
-            Fan Speed: {fanSpeed}%
+            {t('fanControl.fanSpeed', { value: fanSpeed })}
           </label>
-          <div className="flex items-center gap-2">
-            <span className="text-xs">0%</span>
-            <Input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value={fanSpeed.toString()}
-              onChange={(e) => setFanSpeedValue(parseInt(e.target.value, 10))}
-              className="flex-grow"
-            />
-            <span className="text-xs">100%</span>
-          </div>
+          <Slider
+            className="max-w-full"
+            color="primary"
+            defaultValue={50}
+            value={fanSpeed}
+            onChange={(value) => {
+              // 确保value是number类型
+              if (typeof value === 'number') {
+                setFanSpeedValue(value);
+              }
+            }}
+            step={10}
+            marks={[
+              {
+                value: 0,
+                label: "0%",
+              },
+              {
+                value: 20,
+                label: "20%",
+              },
+              {
+                value: 50,
+                label: "50%",
+              },
+              {
+                value: 80,
+                label: "80%",
+              },
+              {
+                value: 100,
+                label: "100%",
+              },
+            ]}
+          />
           <p className="mt-1 text-xs text-default-400">
-            Sets fan speed from 0% (minimum) to 100% (maximum)
+            {t('fanControl.setsFanSpeed')}
           </p>
         </div>
         
@@ -138,10 +164,10 @@ const FanControl: React.FC = () => {
             {isLoading ? (
               <>
                 <span className="animate-spin h-4 w-4 mr-2 border-2 border-white rounded-full border-t-transparent"></span>
-                Applying...
+                {t('fanControl.applying')}
               </>
             ) : (
-              'Apply Fan Speed'
+              t('fanControl.applyButton')
             )}
           </Button>
         </div>
