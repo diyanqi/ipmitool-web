@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@heroui/button';
 import { Slider } from '@heroui/slider';
+import { Card, CardBody } from '@heroui/card';
 import { useTranslation } from 'next-i18next';
 import { setFanSpeed, getFanInfo } from '@/services/ipmiService';
+import { SensorData } from '@/types/ipmi';
 
 const FanControl: React.FC = () => {
   const { t } = useTranslation('common');
   const [fanSpeed, setFanSpeedValue] = useState<number>(50);
-  const [currentFanInfo, setCurrentFanInfo] = useState<string>('Unknown');
+  const [fanSensors, setFanSensors] = useState<SensorData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingInfo, setIsLoadingInfo] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,10 +27,12 @@ const FanControl: React.FC = () => {
         return;
       }
       
-      if (response.data && typeof response.data === 'string') {
-        setCurrentFanInfo(response.data);
-      } else if (response.data && typeof response.data === 'object') {
-        setCurrentFanInfo(JSON.stringify(response.data));
+      if (response.data && Array.isArray(response.data)) {
+        // 过滤出风扇相关的传感器数据
+        const fanData = response.data.filter((sensor: SensorData) => 
+          sensor.name && sensor.name.toLowerCase().includes('fan')
+        );
+        setFanSensors(fanData);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -92,8 +96,32 @@ const FanControl: React.FC = () => {
               <div className="animate-spin h-4 w-4 mr-2 border-2 border-primary rounded-full border-t-transparent"></div>
               <span className="text-sm">{t('fanControl.loading')}</span>
             </div>
-          ) : currentFanInfo && currentFanInfo !== 'Unknown' ? (
-            <p className="mt-1 text-sm break-words">{currentFanInfo}</p>
+          ) : fanSensors && fanSensors.length > 0 ? (
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {fanSensors.map((sensor, index) => (
+                <Card key={index} className="bg-default-50">
+                  <CardBody className="p-3">
+                    <h4 className="text-sm font-medium">{sensor.name}</h4>
+                    <div className="flex items-center mt-1">
+                      <div className="w-full bg-default-200 rounded-full h-2.5">
+                        <div 
+                          className="bg-primary h-2.5 rounded-full" 
+                          style={{ 
+                            width: `${Math.min(100, parseInt(sensor.value) / 50 * 100)}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-1">
+                      <span className="text-xs">{sensor.value} {sensor.status}</span>
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${sensor.status.toLowerCase().includes('ok') ? 'bg-success-100 text-success-700' : 'bg-warning-100 text-warning-700'}`}>
+                        {sensor.status}
+                      </span>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
           ) : (
             <p className="mt-1 text-sm text-default-400">{t('fanControl.noData')}</p>
           )}
