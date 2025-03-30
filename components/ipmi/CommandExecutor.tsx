@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Listbox, ListboxItem } from '@heroui/listbox';
+import { useTranslation } from 'next-i18next';
 import { executeIpmiCommand } from '@/services/ipmiService';
 import { IpmiCommand } from '@/types/ipmi';
 
 const CommandExecutor: React.FC = () => {
+  const { t } = useTranslation('common');
   const [selectedCommand, setSelectedCommand] = useState<IpmiCommand>('sensor');
   const [args, setArgs] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,13 +30,13 @@ const CommandExecutor: React.FC = () => {
       const response = await executeIpmiCommand(selectedCommand, argsArray);
       
       if (!response.success) {
-        setError(response.error || 'Command execution failed');
+        setError(response.error || t('commandExecutor.executionFailed'));
         return;
       }
       
       setResult(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : t('fanControl.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -69,13 +71,13 @@ const CommandExecutor: React.FC = () => {
   return (
     <div className="w-full overflow-hidden bg-content1 rounded-lg shadow">
       <div className="p-4 border-b border-default-200">
-        <h3 className="text-lg font-medium">IPMI Command Executor</h3>
+        <h3 className="text-lg font-medium">{t('commandExecutor.title')}</h3>
       </div>
       <div className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-default-700 mb-1">
-              Command
+              {t('commandExecutor.command')}
             </label>
             <Listbox
               aria-label="IPMI Commands"
@@ -95,12 +97,12 @@ const CommandExecutor: React.FC = () => {
           
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-default-700 mb-1">
-              Arguments (space separated)
+              {t('commandExecutor.arguments')}
             </label>
             <Input
               value={args}
               onChange={(e) => setArgs(e.target.value)}
-              placeholder="E.g. status"
+              placeholder={t('commandExecutor.argsPlaceholder')}
               disabled={isLoading}
             />
           </div>
@@ -118,7 +120,7 @@ const CommandExecutor: React.FC = () => {
             onClick={handleExecute}
             isDisabled={isLoading}
           >
-            {isLoading ? 'Executing...' : 'Execute Command'}
+            {isLoading ? t('commandExecutor.executing') : t('commandExecutor.executeButton')}
           </Button>
         </div>
         

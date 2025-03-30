@@ -35,7 +35,7 @@ const FanControl: React.FC = () => {
         setFanSensors(fanData);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : t('fanControl.unknownError'));
     } finally {
       setIsLoadingInfo(false);
     }
@@ -66,7 +66,7 @@ const FanControl: React.FC = () => {
       // 更新风扇信息
       fetchFanInfo();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : t('fanControl.unknownError'));
     } finally {
       setIsLoading(false);
     }

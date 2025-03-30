@@ -10,6 +10,30 @@
     "applying": "Applying...",
     "successMessage": "Fan speed successfully set to {{value}}%",
     "failedToFetch": "Failed to fetch fan information",
-    "failedToSet": "Failed to set fan speed"
+    "failedToSet": "Failed to set fan speed",
+    "unknownError": "An unknown error occurred"
+  },
+  "powerControl": {
+    "title": "Power Control",
+    "currentStatus": "Current Power Status",
+    "powerOn": "Power On",
+    "powerOff": "Power Off",
+    "powerCycle": "Power Cycle",
+    "reset": "Reset",
+    "failedAction": "Failed to {{action}}"
+  },
+  "commandExecutor": {
+    "title": "IPMI Command Executor",
+    "command": "Command",
+    "arguments": "Arguments (space separated)",
+    "argsPlaceholder": "E.g. status",
+    "executeButton": "Execute Command",
+    "executing": "Executing...",
+    "executionFailed": "Command execution failed"
+  },
+  "dashboard": {
+    "title": "IPMI Management Dashboard",
+    "error": "Error",
+    "failedToFetchChassis": "Failed to fetch chassis status"
   }
 }

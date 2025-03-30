@@ -10,6 +10,30 @@
     "applying": "正在应用...",
     "successMessage": "风扇速度已成功设置为{{value}}%",
     "failedToFetch": "获取风扇信息失败",
-    "failedToSet": "设置风扇速度失败"
+    "failedToSet": "设置风扇速度失败",
+    "unknownError": "发生未知错误"
+  },
+  "powerControl": {
+    "title": "电源控制",
+    "currentStatus": "当前电源状态",
+    "powerOn": "开机",
+    "powerOff": "关机",
+    "powerCycle": "电源循环",
+    "reset": "重启",
+    "failedAction": "{{action}}失败"
+  },
+  "commandExecutor": {
+    "title": "IPMI命令执行器",
+    "command": "命令",
+    "arguments": "参数（空格分隔）",
+    "argsPlaceholder": "例如：status",
+    "executeButton": "执行命令",
+    "executing": "执行中...",
+    "executionFailed": "命令执行失败"
+  },
+  "dashboard": {
+    "title": "IPMI管理仪表板",
+    "error": "错误",
+    "failedToFetchChassis": "获取机箱状态失败"
   }
 }

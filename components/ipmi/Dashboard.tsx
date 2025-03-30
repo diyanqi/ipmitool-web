@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'next-i18next';
 import SensorTable from './SensorTable';
 import ChassisStatus from './ChassisStatus';
 import PowerControl from './PowerControl';
@@ -7,6 +8,7 @@ import FanControl from './FanControl';
 import { getChassisStatus } from '@/services/ipmiService';
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation('common');
   const [chassisStatus, setChassisStatus] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,13 +21,13 @@ const Dashboard: React.FC = () => {
       const response = await getChassisStatus();
       
       if (!response.success) {
-        setError(response.error || 'Failed to fetch chassis status');
+        setError(response.error || t('dashboard.failedToFetchChassis'));
         return;
       }
       
       setChassisStatus(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : t('fanControl.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -39,11 +41,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">IPMI Management Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-8">{t('dashboard.title')}</h1>
       
       {error && (
         <div className="mb-8 p-4 bg-danger-100 text-danger-700 rounded-lg">
-          <p className="font-medium">Error:</p>
+          <p className="font-medium">{t('dashboard.error')}:</p>
           <p>{error}</p>
         </div>
       )}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@heroui/button';
+import { useTranslation } from 'next-i18next';
 import { setPowerOn, setPowerOff, setPowerCycle, setPowerReset } from '@/services/ipmiService';
 
 interface PowerControlProps {
@@ -8,6 +9,7 @@ interface PowerControlProps {
 }
 
 const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChange }) => {
+  const { t } = useTranslation('common');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,14 +23,14 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
       const response = await action();
       
       if (!response.success) {
-        setError(response.error || `Failed to ${actionName}`);
+        setError(response.error || t('powerControl.failedAction', { action: actionName }));
         return;
       }
       
       // Refresh the status after action
       onStatusChange();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : t('fanControl.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -37,11 +39,11 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
   return (
     <div className="w-full overflow-hidden bg-content1 rounded-lg shadow">
       <div className="p-4 border-b border-default-200">
-        <h3 className="text-lg font-medium">Power Control</h3>
+        <h3 className="text-lg font-medium">{t('powerControl.title')}</h3>
       </div>
       <div className="p-4">
         <div className="mb-4">
-          <p className="text-sm font-medium text-default-500">Current Power Status</p>
+          <p className="text-sm font-medium text-default-500">{t('powerControl.currentStatus')}</p>
           <p className="mt-1 text-sm">
             <span 
               className={`px-2 py-1 rounded-full ${isPowerOn ? 'bg-success-100 text-success-700' : 'bg-danger-100 text-danger-700'}`}
@@ -64,7 +66,7 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
             isDisabled={isLoading || isPowerOn}
             onClick={() => handlePowerAction(setPowerOn, 'power on')}
           >
-            Power On
+            {t('powerControl.powerOn')}
           </Button>
           
           <Button 
@@ -73,7 +75,7 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
             isDisabled={isLoading || !isPowerOn}
             onClick={() => handlePowerAction(setPowerOff, 'power off')}
           >
-            Power Off
+            {t('powerControl.powerOff')}
           </Button>
           
           <Button 
@@ -82,7 +84,7 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
             isDisabled={isLoading || !isPowerOn}
             onClick={() => handlePowerAction(setPowerCycle, 'power cycle')}
           >
-            Power Cycle
+            {t('powerControl.powerCycle')}
           </Button>
           
           <Button 
@@ -91,7 +93,7 @@ const PowerControl: React.FC<PowerControlProps> = ({ currentStatus, onStatusChan
             isDisabled={isLoading || !isPowerOn}
             onClick={() => handlePowerAction(setPowerReset, 'reset')}
           >
-            Reset
+            {t('powerControl.reset')}
           </Button>
         </div>
         
